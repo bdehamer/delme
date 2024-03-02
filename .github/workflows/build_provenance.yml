@@ -1,0 +1,20 @@
+name: build-provenance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish package
+    runs-on: ubuntu-latest
+    steps:
+    - name: Make artifact
+      run: date > artifact
+    - name: Build Provenance
+      uses: bdehamer/abp@main
+      with:
+        subject-path: artifact
