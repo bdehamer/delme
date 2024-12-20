@@ -1,10 +1,14 @@
+---
 name: publish
 
-on:
+"on":
   workflow_dispatch:
-  push:
-    tags:
-      - 'v*'
+    inputs:
+      version:
+        description: 'package version'
+        required: true
+        default: '1.0.1'
+        type: string
 
 permissions:
   contents: read
@@ -15,18 +19,21 @@ jobs:
     name: Publish package
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout source
-      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
-    - name: Setup node
-      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3
-      with:
-        node-version: 22
-        registry-url: 'https://registry.npmjs.org'
-        cache: npm
-    - name: Publish package
-      run: |
-        npm install -g npm@next-10
-        npm publish --provenance --access public --loglevel verbose
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
-
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+          cache: npm
+      - name: Bump package versions
+        run: |
+          sed -i "s/1.0.0/${{ github.event.inputs.version }}/" "package.json"
+      - name: Publish package
+        run: |
+          #npm install -g npm@next-10
+          #npm publish --provenance --access public --loglevel verbose
+          npm exec npm@npm/cli#bdehamer/prov-debug-10 -- publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
