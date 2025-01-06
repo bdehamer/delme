@@ -32,7 +32,7 @@ jobs:
           sed -i "s/1.0.0/${{ github.event.inputs.version }}/" "package.json"
       - name: Publish package
         run: |
-          npm install -g npm@next-10
+          npm install -g npm@next-11
           npm publish --provenance --access public --loglevel verbose
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
