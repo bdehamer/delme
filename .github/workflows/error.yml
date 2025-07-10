@@ -1,0 +1,27 @@
+---
+name: expect fail
+
+"on":
+  workflow_dispatch:
+    inputs:
+      code:
+        description: 'exit code'
+        required: true
+        default: '0'
+        type: string
+
+jobs:
+  check:
+    name: Expect failure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exit with code
+        id: exit
+        run: |
+          exit ${{ github.event.inputs.code }}
+        continue-on-error: true
+      - name: Check for failure
+        if: ${{ steps.exit.outcome == 'success' }}
+        run: |
+          echo "Expected previous step to fail"
+          exit 1
