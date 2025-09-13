@@ -1,0 +1,20 @@
+---
+name: release
+
+"on":
+  release:
+    types: [published, created, edited, prereleased, released]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hmarr/debug-action@v3
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
