@@ -1,0 +1,26 @@
+---
+name: Load Players
+
+"on":
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  load-players:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get player data
+        run:
+          curl "https://api.sleeper.app/v1/players/nfl" > players.json
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Commit and push player data
+        run: |
+          git add .
+          git commit -m "update player data"
+          git push
