@@ -3,7 +3,9 @@ name: Load Players
 
 "on":
   workflow_dispatch:
-
+  schedule:
+    # run every day at midnight
+    - cron: '0 0 * * *'
 permissions:
   contents: write
 
