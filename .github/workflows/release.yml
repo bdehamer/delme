@@ -17,3 +17,9 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: echo "$GITHUB_CONTEXT"
+      - name: Fail if github.ref is empty
+        run: |
+          if [ -z "${{ github.ref }}" ]; then
+            echo "github.ref is empty"
+            exit 1
+          fi
